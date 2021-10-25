@@ -1,0 +1,20 @@
+{"type":"directory","name":"node_modules","contents":[
+  {"type":"directory","name":"@babel","contents":[
+    {"type":"directory","name":"code-frame","contents":[
+      {"type":"file","name":"LICENSE"},
+      {"type":"file","name":"README.md"},
+      {"type":"directory","name":"lib","contents":[
+        {"type":"file","name":"index.js"}
+      ]},
+      {"type":"file","name":"package.json"},
+      {"type":"directory","name":"@ozon","contents":[
+        {"type":"link","name":"sc-components","target":"../../packages/sc-components","contents":[]},
+        {"type":"link","name":"sc-design-utils","target":"../../packages/sc-design-utils","contents":[]},
+        {"type":"link","name":"sc-module-registry","target":"../../packages/sc-module-registry","contents":[]},
+        {"type":"link","name":"sc-storybook","target":"../../packages/storybook","contents":[]},
+        {"type":"link","name":"seller-ui-codegen","target":"../../packages/seller-ui-codegen","contents":[]},
+        {"type":"link","name":"vue-component-base","target":"../../packages/vue-component-base","contents":[]}
+      ]}
+    ]}
+  ]}
+]}
