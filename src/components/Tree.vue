@@ -1,58 +1,44 @@
 <template>
-  <ul id="demo">
-    <tree-item
-      class="item"
-      :item="treeData"
-    ></tree-item>
-  </ul>
+  <div>
+    <div class="sticky">{{selectedItemPath}}</div>
+    <ul>
+      <tree-item
+        class="item"
+        :item="treeData"
+        :pathName="pathName"
+        @select-item="onSelectItem"
+      ></tree-item>
+    </ul>
+  </div>
 </template>
 
 <script>
+// import treeData from '../../public/static/node_modules.json';
 import treeData from '../test_data.json';
-// import treeData from '../treeData';
 import TreeItem from './TreeItem.vue';
-
-// const treeData = {
-//   name: "My Tree",
-//   children: [
-//     { name: "hello" },
-//     { name: "wat" },
-//     {
-//       name: "child folder",
-//       children: [
-//         {
-//           name: "child folder",
-//           children: [{ name: "hello" }, { name: "wat" }]
-//         },
-//         { name: "hello" },
-//         { name: "wat" },
-//         {
-//           name: "child folder",
-//           children: [{ name: "hello" }, { name: "wat" }]
-//         }
-//       ]
-//     }
-//   ]
-// };
 
 export default {
   name: 'Tree',
   components: { TreeItem },
 
   data: () => ({
-    treeData: treeData
+    treeData: treeData,
+    pathName: treeData.name,
+    selectedItemPath: '--------',
   }),
 
-  mounted: function () {
-    // console.log('---this.treeData', this.treeData);
-  },
-
   methods: {
+    onSelectItem: function(value) {
+      console.log('Принял');
+      this.selectedItemPath = value;
+    }
   }
-
 }
 </script>
 
 <style>
+  .sticky {
+    position: sticky;
+  }
 
 </style>

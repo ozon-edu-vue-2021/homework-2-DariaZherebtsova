@@ -1,8 +1,10 @@
 <template>
   <li>
     <div
-      :class="{bold: isFolder}"
+      :class="['item-name', {bold: isFolder, selected: isSelected, underscored: isUnderscored}]"
       @click="toggle"
+      @mouseenter="onMouseHover"
+      @mouseleave="onMouseHover"
     >
       <span class="icon-wrapper">
         <component v-bind:is="currentIconComponent"></component>
@@ -13,10 +15,10 @@
       <tree-item
         class="item"
         v-for="(child, index) in item.contents"
-        :key="index"
+        :key="`${child.name}-${index}`"
         :item="child"
-        @make-folder="$emit('make-folder', $event)"
-        @add-item="$emit('add-item', $event)"
+        :pathName="`${pathName}/${child.name}`"
+        @select-item="onSelectItem"
       ></tree-item>
     </ul>
   </li>
@@ -32,50 +34,77 @@ export default {
   name: 'TreeItem',
   components: { IconFolder, IconLink, IconFile },
   props: {
-    item: Object,
+    item: {
+      type: Object,
+      default: () => {},
+    },
+    pathName: {
+      type: String,
+      default: '',
+    }
   },
   data: function() {
     return {
       isOpen: false,
+      isSelected: false,
+      isUnderscored: false,
     };
   },
   mounted: function () {
-    console.log('---mounted', this.getIcon('file'));
+    console.log('---mounted', this.pathName);
   },
   computed: {
     isFolder: function() {
-      // return this.item.contents && this.item.contents.length;
       return this.item.type === 'directory';
     },
     isExist: function() {
       return this.isFolder && this.isOpen;
     },
     currentIconComponent: function() {
-      // console.log('--this.item.type', this.item.type);
-      // console.log('--icon', iconTypes[this.item.type]);
       return this.getIcon(this.item.type);
-      // if (this.isFolder) {
-      //   return 'IconFolder';
-      // }
-      // else {
-      //   return 'IconLink'
-      // }
     },
   },
   methods: {
     toggle: function() {
       if (this.isFolder) {
         this.isOpen = !this.isOpen;
+      } else {
+        this.isSelected = !this.isSelected;
+        this.$emit("select-item", this.pathName);
+        console.log(this.pathName);
       }
     },
-    getIcon: getIcon,
+    onMouseHover: function() {
+      if (this.item.type === 'link') {
+        this.isUnderscored = !this.isUnderscored;
+      }
+    },
+    onSelectItem: function(value) {
+      this.$emit("select-item", value);
+    },
+    getIcon,
   }
 }
 </script>
 
 <style scoped>
+  .item {
+    cursor: pointer;
+  }
+  .bold {
+    font-weight: bold;
+  }
   .icon-wrapper {
     vertical-align: text-top;
   }
-
+  .item-name{
+    display: inline-block;
+    padding-right: 5px;
+  }
+  .selected {
+    background-color:rgba(128, 255, 0, 0.294);
+  }
+  .underscored {
+    text-decoration: underline;
+  }
 </style>
