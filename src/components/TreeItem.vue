@@ -1,34 +1,34 @@
 <template>
   <li>
     <div
-      :class="['item-name', {bold: isFolder, selected: isSelected, underscored: isUnderscored}]"
+      :class="['item-name', {bold: isOpen, selected: isSelected, underscored: isUnderscored}]"
       @click="toggle"
       @mouseenter="onMouseHover"
       @mouseleave="onMouseHover"
     >
       <span class="icon-wrapper">
-        <component v-bind:is="currentIconComponent"></component>
+        <component :is="suitableIconComponent"></component>
       </span>
       {{ item.name }}
     </div>
-    <ul v-if="isExist">
+    <ul v-if="isOpenedFolder">
       <tree-item
         class="item"
         v-for="(child, index) in item.contents"
         :key="`${child.name}-${index}`"
         :item="child"
         :pathName="`${pathName}/${child.name}`"
-        @select-item="onSelectItem"
       ></tree-item>
     </ul>
   </li>
 </template>
 
 <script>
+import {eventBus} from '../main.js'
+import getIcon from '../utils/iconTypes';
 import IconFolder from './Icons/IconFolder.vue';
 import IconLink from './Icons/IconLink.vue';
 import IconFile from './Icons/IconFile.vue';
-import getIcon from '../utils/iconTypes';
 
 export default {
   name: 'TreeItem',
@@ -50,17 +50,17 @@ export default {
       isUnderscored: false,
     };
   },
-  mounted: function () {
-    console.log('---mounted', this.pathName);
+  beforeDestroy() {
+    eventBus.$emit('select-item', '');
   },
   computed: {
     isFolder: function() {
       return this.item.type === 'directory';
     },
-    isExist: function() {
+    isOpenedFolder: function() {
       return this.isFolder && this.isOpen;
     },
-    currentIconComponent: function() {
+    suitableIconComponent: function() {
       return this.getIcon(this.item.type);
     },
   },
@@ -70,17 +70,16 @@ export default {
         this.isOpen = !this.isOpen;
       } else {
         this.isSelected = !this.isSelected;
-        this.$emit("select-item", this.pathName);
-        console.log(this.pathName);
+        const selectedName = this.isSelected ? this.pathName : '';
+        eventBus.$emit('select-item', selectedName);
+        this.$root.previousSelected.isSelected = false;
+        this.$root.previousSelected = this;
       }
     },
     onMouseHover: function() {
       if (this.item.type === 'link') {
         this.isUnderscored = !this.isUnderscored;
       }
-    },
-    onSelectItem: function(value) {
-      this.$emit("select-item", value);
     },
     getIcon,
   }

@@ -20,12 +20,4 @@ export default {
     font-family: Menlo, Consolas, monospace;
     color: #444;
   }
-  ul {
-    padding-left: 1em;
-    line-height: 1.5em;
-    list-style-type: dot;
-  }
-  li {
-    list-style-type: none;
-  }
 </style>

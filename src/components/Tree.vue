@@ -1,20 +1,19 @@
 <template>
   <div>
-    <div class="sticky">{{selectedItemPath}}</div>
-    <ul>
+    <div class="path-name">{{'selected file: ' + selectedItemPath}}</div>
+    <ul class="tree">
       <tree-item
         class="item"
         :item="treeData"
         :pathName="pathName"
-        @select-item="onSelectItem"
       ></tree-item>
     </ul>
   </div>
 </template>
 
 <script>
-// import treeData from '../../public/static/node_modules.json';
-import treeData from '../test_data.json';
+import {eventBus} from '../main.js'
+import treeData from '../../public/static/node_modules.json';
 import TreeItem from './TreeItem.vue';
 
 export default {
@@ -24,21 +23,35 @@ export default {
   data: () => ({
     treeData: treeData,
     pathName: treeData.name,
-    selectedItemPath: '--------',
+    selectedItemPath: '',
   }),
 
-  methods: {
-    onSelectItem: function(value) {
-      console.log('Принял');
-      this.selectedItemPath = value;
-    }
-  }
+  created () {
+    eventBus.$on('select-item', value => {
+      this.selectedItemPath = value
+    });
+    // знаю что в больших проектах так не делают, но мы же ещё не проходили Vuex ;)
+    this.$root.previousSelected = {};
+  },
 }
 </script>
 
 <style>
-  .sticky {
-    position: sticky;
+  ul {
+    padding-left: 1em;
+    line-height: 1.5em;
+    list-style-type: dot;
   }
-
+  li {
+    list-style-type: none;
+  }
+  .tree {
+    padding-top: 50px;
+  }
+  .path-name {
+    position: fixed;
+    height: 20px;
+    padding: 10px;
+    background-color: whitesmoke;
+  }
 </style>
