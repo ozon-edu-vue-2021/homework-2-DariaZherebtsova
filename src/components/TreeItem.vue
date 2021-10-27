@@ -45,6 +45,7 @@ export default {
       default: '',
     }
   },
+  inject: ['setPreviousSelected'],
   data: function() {
     return {
       isOpen: false,
@@ -74,8 +75,7 @@ export default {
         this.isSelected = !this.isSelected;
         const selectedName = this.isSelected ? this.pathName : '';
         eventBus.$emit('select-item', selectedName);
-        this.$root.previousSelected.isSelected = false;
-        this.$root.previousSelected = this;
+        this.setPreviousSelected(this);
       }
     },
     onMouseHover: function() {

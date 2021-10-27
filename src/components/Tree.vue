@@ -25,16 +25,27 @@ export default {
     treeData: treeData,
     pathName: treeData.name,
     selectedItemPath: '',
+    previousSelected: {},
   }),
   created () {
     eventBus.$on('select-item', value => {
       this.selectedItemPath = value
     });
-    this.$root.previousSelected = {};
   },
   beforeDestroy() {
     eventBus.$off('select-item');
   },
+  provide: function () {
+    return {
+      setPreviousSelected: this.setPreviousSelected,
+    }
+  },
+  methods: {
+    setPreviousSelected: function(value){ 
+      this.previousSelected.isSelected = false;
+      this.previousSelected = value;
+    },
+  }
 }
 </script>
 
