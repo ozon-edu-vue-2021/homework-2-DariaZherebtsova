@@ -1,19 +1,21 @@
 <template>
-  <li>
+  <li class="tree__li">
     <div
-      :class="['item-name', {bold: isOpen, selected: isSelected, underscored: isUnderscored}]"
+      :class="['tree-item__name', {
+        'tree-item__name_bold': isOpen,
+        'tree-item__name_selected': isSelected,
+        'tree-item__name_underscored': isUnderscored
+      }]"
       @click="toggle"
       @mouseenter="onMouseHover"
       @mouseleave="onMouseHover"
     >
-      <span class="icon-wrapper">
-        <component :is="suitableIconComponent"></component>
-      </span>
+      <component class="tree-item__icon" :is="suitableIconComponent"></component>
       {{ item.name }}
     </div>
-    <ul v-if="isOpenedFolder">
+    <ul v-if="isOpenedFolder" class="tree__ul">
       <tree-item
-        class="item"
+        class="tree-item"
         v-for="(child, index) in item.contents"
         :key="`${child.name}-${index}`"
         :item="child"
@@ -87,23 +89,23 @@ export default {
 </script>
 
 <style scoped>
-  .item {
+  .tree-item {
     cursor: pointer;
   }
-  .bold {
-    font-weight: bold;
-  }
-  .icon-wrapper {
+  .tree-item__icon {
     vertical-align: text-top;
   }
-  .item-name{
+  .tree-item__name{
     display: inline-block;
     padding-right: 5px;
   }
-  .selected {
+  .tree-item__name_bold {
+    font-weight: bold;
+  }
+  .tree-item__name_selected {
     background-color:rgba(128, 255, 0, 0.294);
   }
-  .underscored {
+  .tree-item__name_underscored {
     text-decoration: underline;
   }
 </style>

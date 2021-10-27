@@ -15,9 +15,3 @@ export default {
 }
 </script>
 
-<style>
-  body {
-    font-family: Menlo, Consolas, monospace;
-    color: #444;
-  }
-</style>

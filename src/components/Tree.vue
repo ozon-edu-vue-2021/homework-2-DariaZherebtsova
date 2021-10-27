@@ -1,9 +1,11 @@
 <template>
-  <div>
-    <div class="path-name">{{'selected file: ' + selectedItemPath}}</div>
-    <ul class="tree">
+  <div class="tree">
+    <div class="tree__path-name">
+      {{'selected file: ' + selectedItemPath}}
+    </div>
+    <ul class="tree__ul">
       <tree-item
-        class="item"
+        class="tree-item"
         :item="treeData"
         :pathName="pathName"
       ></tree-item>
@@ -19,37 +21,41 @@ import TreeItem from './TreeItem.vue';
 export default {
   name: 'Tree',
   components: { TreeItem },
-
   data: () => ({
     treeData: treeData,
     pathName: treeData.name,
     selectedItemPath: '',
   }),
-
   created () {
     eventBus.$on('select-item', value => {
       this.selectedItemPath = value
     });
-    // знаю что в больших проектах так не делают, но мы же ещё не проходили Vuex ;)
     this.$root.previousSelected = {};
+  },
+  beforeDestroy() {
+    eventBus.$off('select-item');
   },
 }
 </script>
 
 <style>
-  ul {
+  .tree {
+    padding-top: 40px;
+    font-family: Menlo, Consolas, monospace;
+    color: #444;
+  }
+  .tree__ul {
     padding-left: 1em;
     line-height: 1.5em;
     list-style-type: dot;
   }
-  li {
+  .tree__li {
     list-style-type: none;
   }
-  .tree {
-    padding-top: 50px;
-  }
-  .path-name {
+  .tree__path-name {
     position: fixed;
+    top: 15px;
+    left: 15px;
     height: 20px;
     padding: 10px;
     background-color: whitesmoke;
